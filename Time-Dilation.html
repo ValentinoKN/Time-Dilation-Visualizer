@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Time Dilation Visualizer</title>
+    <style>
+        body {
+            background: #1c1c1c;
+            color: #f0f0f0;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        canvas {
+            background: #333;
+            border: 2px solid #f0f0f0;
+            margin-top: 20px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .controls {
+            margin: 20px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        label {
+            margin: 10px;
+        }
+        input, select {
+            margin: 5px;
+            padding: 5px;
+            width: 100px;
+            border: 1px solid #888;
+            border-radius: 5px;
+            background: #2c2c2c;
+            color: #f0f0f0;
+        }
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            background: #444;
+            color: #f0f0f0;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #666;
+        }
+        h1 {
+            margin-top: 20px;
+        }
+        h3 {
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Time Dilation Visualizer</h1>
+    <div class="controls">
+        <label>Speed A (% of c): <input type="number" id="speedA" value="50"></label>
+        <label>Speed B (% of c): <input type="number" id="speedB" value="0"></label>
+        <label>Time A: <input type="number" id="timeA" value="10">
+            <select id="timeAUnit">
+                <option value="1">Seconds</option>
+                <option value="60">Minutes</option>
+                <option value="3600">Hours</option>
+                <option value="86400">Days</option>
+                <option value="604800">Weeks</option>
+                <option value="2629800">Months</option>
+                <option value="31557600">Years</option>
+            </select>
+        </label>
+        <button onclick="calculate()">Calculate</button>
+        <button onclick="resetClocks()">Reset</button>
+        <button onclick="togglePause()">Pause/Resume</button>
+    </div>
+    <div class="controls">
+        <button onclick="setMode('cars')">Cars</button>
+        <button onclick="setMode('aging')">Aging</button>
+        <button onclick="setMode('bouncing')">Ball Bouncing</button>
+    </div>
+    <canvas id="animationCanvas" width="1400" height="700"></canvas>
+    <h3 id="result"></h3>
+
+    <script>
+        const c = 299792458;
+        let gammaA = 1;
+        let gammaB = 1;
+        let tA = 10;
+        let tB = 10;
+        let unitMultiplier = 1;
+        let unitName = 'Seconds';
+        let mode = 'cars';
+        let paused = false;
+
+        function calculate() {
+            const speedA = parseFloat(document.getElementById("speedA").value) / 100 * c;
+            const speedB = parseFloat(document.getElementById("speedB").value) / 100 * c;
+            const timeValue = parseFloat(document.getElementById("timeA").value);
+            unitMultiplier = parseFloat(document.getElementById("timeAUnit").value);
+            unitName = document.getElementById("timeAUnit").options[document.getElementById("timeAUnit").selectedIndex].text;
+            tA = timeValue * unitMultiplier;
+            gammaA = 1 / Math.sqrt(1 - (speedA * speedA) / (c * c));
+            gammaB = 1 / Math.sqrt(1 - (speedB * speedB) / (c * c));
+            tB = tA * (gammaA / gammaB);
+            document.getElementById("result").innerText = `Time for B: ${(tB/unitMultiplier).toFixed(2)} ${unitName}`;
+        }
+
+        function resetClocks() {
+            clockA = 0;
+            clockB = 0;
+            lastTime = null;
+        }
+
+        function togglePause() {
+            paused = !paused;
+        }
+
+        function setMode(newMode) {
+            mode = newMode;
+        }
+
+        const canvas = document.getElementById("animationCanvas");
+        const ctx = canvas.getContext("2d");
+        let clockA = 0, clockB = 0;
+
+        function drawCar(x, y) {
+            ctx.fillStyle = "#FFD700";
+            ctx.fillRect(x, y, 80, 40);
+            ctx.fillStyle = "#000";
+            ctx.beginPath();
+            ctx.arc(x + 15, y + 40, 10, 0, Math.PI * 2);
+            ctx.arc(x + 65, y + 40, 10, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function drawPerson(x, y, scale) {
+            ctx.fillStyle = "#FFD700";
+            ctx.beginPath();
+            ctx.arc(x, y, 10 * scale, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillRect(x - 5 * scale, y, 10 * scale, 40 * scale);
+        }
+
+        function drawBall(x, y) {
+            ctx.fillStyle = "#FFD700";
+            ctx.beginPath();
+            ctx.arc(x, y, 20, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#f0f0f0";
+            ctx.font = "20px Arial";
+
+            if (mode === 'cars') {
+                ctx.fillText(`Clock A: ${clockA.toFixed(1)}s`, 100, 50);
+                ctx.fillText(`Clock B: ${clockB.toFixed(1)}s`, 100, 300);
+                drawCar(100 + clockA * 20, 100);
+                drawCar(100 + clockB * 20, 350);
+            } 
+            else if (mode === 'aging') {
+                ctx.beginPath();
+                ctx.moveTo(canvas.width/2, 0);
+                ctx.lineTo(canvas.width/2, canvas.height);
+                ctx.stroke();
+
+                ctx.fillText(`Clock A: ${clockA.toFixed(1)}s`, canvas.width/4 - 50, 50);
+                ctx.fillText(`Clock B: ${clockB.toFixed(1)}s`, canvas.width*3/4 - 50, 50);
+
+                drawPerson(canvas.width/4, canvas.height/2, 1 + clockA * 0.05);
+                drawPerson(canvas.width*3/4, canvas.height/2, 1 + clockB * 0.05);
+            } 
+            else if (mode === 'bouncing') {
+                ctx.strokeStyle = "#f0f0f0";
+                ctx.beginPath();
+                ctx.moveTo(200, 650);
+                ctx.lineTo(400, 650);
+                ctx.moveTo(1000, 650);
+                ctx.lineTo(1200, 650);
+                ctx.stroke();
+
+                ctx.fillText(`Clock A: ${clockA.toFixed(1)}s`, 280, 50);
+                ctx.fillText(`Clock B: ${clockB.toFixed(1)}s`, 1080, 50);
+
+                const bounceHeightA = 550 * (Math.abs(Math.sin(clockA)));
+                const bounceHeightB = 550 * (Math.abs(Math.sin(clockB)));
+
+                drawBall(300, 650 - bounceHeightA);
+                drawBall(1100, 650 - bounceHeightB);
+            }
+        }
+
+        let lastTime = null;
+        function animate(timestamp) {
+            if (!lastTime) lastTime = timestamp;
+            const delta = (timestamp - lastTime) / 1000;
+            lastTime = timestamp;
+            
+            if (!paused) {
+                clockA += delta;
+                clockB += delta * (gammaA / gammaB);
+            }
+
+            draw();
+            requestAnimationFrame(animate);
+        }
+
+        calculate();
+        requestAnimationFrame(animate);
+    </script>
+</body>
+</html>
