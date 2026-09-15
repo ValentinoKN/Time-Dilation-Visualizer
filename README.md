@@ -1,43 +1,52 @@
-# ChronoLens — Time Dilation Visualizer
+# ChronoLens V2 — Relativity Laboratory
 
-An interactive, cinematic special-relativity visualizer built as a zero-dependency browser app.
+A cinematic, zero-dependency browser laboratory for exploring special relativity and a focused Schwarzschild gravitational-time-dilation model.
 
-## What changed
+## V2 chambers
 
-The original clock/car demo has been rebuilt into a responsive visual laboratory with:
+- **Life / decay** — seed → tree/blossom → apple → aging → decay, driven by proper time.
+- **Solar system** — stylized orbital clocks that visibly desynchronise.
+- **Relativistic race** — moving vehicles with visual length contraction.
+- **Human aging** — compressed biological clocks for twin-paradox intuition.
+- **Light clocks** — photon-bounce clocks.
+- **Time vortex** — cinematic proper-time phase visualization.
+- **Twin paradox mission** — Earth ↔ Alpha Centauri round trips with reunion-time calculations.
+- **Minkowski spacetime** — world-lines and light-cone visualization.
+- **Relativistic Doppler** — wavelength compression/stretching and live Doppler factor.
+- **Black-hole lab** — stationary-clock gravitational time dilation outside a Schwarzschild horizon.
 
-- **Apple lifecycle** — seed/sprout → blossom → ripe fruit → aging → decay, including reversible visual time.
-- **Solar systems** — eight stylized planets orbit at rates driven by each observer's proper time.
-- **Relativistic cars** — two moving observers provide an intuitive motion comparison.
-- **Human aging** — compressed lifespans demonstrate twin-paradox intuition.
-- **Light clocks** — a classic conceptual visualization of relativistic clock behavior.
-- **Time vortex** — a cinematic phase-difference visualization inspired by magical time-manipulation aesthetics without using copyrighted assets.
-- Independent Observer A/B speeds from 0 to 99.99% of `c`.
-- Lorentz factors, proper-time rates and live clock separation.
-- Forward and reverse simulation time.
-- Responsive glass/cosmic interface with no external dependencies.
+V2 also adds signed velocities, relativistic A↔B relative velocity, length-contraction readouts, fullscreen presentation mode, guided mission presets, a wider simulation-rate range, and a clearer separation between quantitative physics and compressed teaching animations.
 
-## Physics
-
-The simulation uses special-relativistic time dilation:
+## Equations
 
 ```text
-γ = 1 / √(1 − v²/c²)
+β = v/c
+γ = 1 / √(1 − β²)
 Δτ = Δt / γ
+L = L₀ / γ
+u′ = (u − v) / (1 − uv/c²)
+D = √((1 + β) / (1 − β))
+dτ/dt = √(1 − rₛ/r)       [stationary Schwarzschild clock]
 ```
 
-Here `Δt` is elapsed laboratory-frame time and `Δτ` is the proper time accumulated by an observer moving at speed `v` relative to that frame.
+## Scientific scope
 
-The lifecycle, orbital, vehicle and aging animations deliberately compress real-world scales and durations so differences can be seen quickly. The live proper-time clocks and Lorentz-factor calculations are the quantitative part of the simulation.
+ChronoLens is an educational visualizer, not a numerical general-relativity solver. The proper-time, Lorentz, relative-velocity, contraction, Doppler, twin-mission and Schwarzschild stationary-clock calculations are the quantitative layer. Biological lifecycles, orbital motion, vehicles and vortex effects are intentionally compressed or artistic.
 
-## Run it
+Negative simulation flow is explicitly a **visual rewind control**. It does not imply that special or general relativity reverses entropy or thermodynamic time.
 
-Open `index.html` directly in a modern browser. No build step, package manager or server is required.
+The black-hole chamber currently assumes a non-rotating Schwarzschild black hole and a stationary clock outside the event horizon. It is not a Kerr simulation, geodesic ray tracer, or physically complete accretion-disk model.
 
-## Suggested experiment
+## Run
 
-Set Observer A to `99% c` and Observer B to `0% c`. Compare the clocks and switch between Apple Lifecycle, Solar System and Human Aging. Then set simulation time negative to rewind the lifecycle visualization.
+Open `index.html` in a modern browser. There is no build step and no external dependency.
 
-## Project direction
+Files are split into `index.html`, `styles.css`, and `app.js` so the project is easier to maintain and extend.
 
-Possible next steps include WebGL/Three.js rendering, gravitational time dilation, interactive spacetime diagrams, educational guided scenarios, audio/particle effects and a proper test suite.
+## Experiments
+
+Try Observer A at 90%, 99%, and 99.9% of `c`, then compare the lifecycle and light clocks. Run the Alpha Centauri guided mission and inspect the reunion age difference. Open the spacetime chamber to see the world-line tilt. Finally, move the black-hole radius control toward `1 rₛ` and watch the stationary clock rate approach zero.
+
+## Next frontier
+
+Potential V3 work: WebGL/Three.js 3D rendering, Kerr black holes and frame dragging, ray-traced lensing, relativistic aberration, richer mission scripting, audio-reactive particles, accessibility controls, automated physics tests, and GitHub Pages deployment.
