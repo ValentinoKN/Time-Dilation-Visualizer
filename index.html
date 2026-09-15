@@ -1,220 +1,46 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Time Dilation Visualizer</title>
-    <style>
-        body {
-            background: #1c1c1c;
-            color: #f0f0f0;
-            font-family: 'Arial', sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-        }
-        canvas {
-            background: #333;
-            border: 2px solid #f0f0f0;
-            margin-top: 20px;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .controls {
-            margin: 20px;
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        label {
-            margin: 10px;
-        }
-        input, select {
-            margin: 5px;
-            padding: 5px;
-            width: 100px;
-            border: 1px solid #888;
-            border-radius: 5px;
-            background: #2c2c2c;
-            color: #f0f0f0;
-        }
-        button {
-            margin: 5px;
-            padding: 10px 20px;
-            font-weight: bold;
-            border: none;
-            border-radius: 5px;
-            background: #444;
-            color: #f0f0f0;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        button:hover {
-            background: #666;
-        }
-        h1 {
-            margin-top: 20px;
-        }
-        h3 {
-            margin: 20px;
-        }
-    </style>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ChronoLens — Time Dilation Visualizer</title>
+<style>
+:root{--bg:#05070d;--panel:rgba(12,18,32,.78);--line:rgba(132,220,255,.18);--cyan:#6ee7ff;--violet:#a78bfa;--gold:#f7c76b;--text:#eef7ff;--muted:#8ea3b7;--danger:#ff7a90}*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:radial-gradient(circle at 50% -20%,#152b4c 0,#090d18 35%,#03050a 75%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}body:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:radial-gradient(#fff 0.6px,transparent .7px);background-size:37px 37px;opacity:.12}.shell{width:min(1500px,96vw);margin:auto;padding:24px 0 40px}.top{display:flex;justify-content:space-between;gap:18px;align-items:end;margin-bottom:18px}.eyebrow{font-size:11px;letter-spacing:.28em;color:var(--cyan);font-weight:800}.brand h1{margin:5px 0 0;font-size:clamp(30px,5vw,60px);line-height:.95;letter-spacing:-.055em}.brand h1 span{color:var(--cyan);text-shadow:0 0 28px #6ee7ff66}.brand p{max-width:700px;color:var(--muted);margin:10px 0 0}.badge{border:1px solid var(--line);background:#08111ddd;padding:10px 14px;border-radius:999px;color:#b9cad8;font-size:12px;white-space:nowrap}.layout{display:grid;grid-template-columns:330px 1fr;gap:16px}.panel{background:var(--panel);border:1px solid var(--line);box-shadow:0 18px 60px #0008,inset 0 1px #ffffff0a;backdrop-filter:blur(18px);border-radius:22px}.controls{padding:18px;display:flex;flex-direction:column;gap:17px}.section-title{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#71869a;font-weight:800;margin-bottom:8px}.scene-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.scene{border:1px solid #ffffff12;background:#ffffff07;color:#b8c9d7;border-radius:12px;padding:10px 8px;cursor:pointer;font:inherit;font-size:12px;transition:.2s}.scene:hover,.scene.active{border-color:#6ee7ff70;color:white;background:#6ee7ff12;box-shadow:inset 0 0 20px #6ee7ff0b}.row{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px}.value{font-variant-numeric:tabular-nums;color:var(--cyan);font-weight:800}input[type=range]{width:100%;accent-color:#6ee7ff}.quick{display:flex;gap:6px;flex-wrap:wrap}.quick button,.action{border:1px solid #ffffff15;background:#ffffff08;color:#cfe0ec;border-radius:10px;padding:8px 10px;cursor:pointer}.quick button:hover,.action:hover{border-color:#6ee7ff55}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.action.primary{background:linear-gradient(135deg,#4cc9f022,#9b5de522);border-color:#6ee7ff55}.note{font-size:11px;line-height:1.55;color:#71869a;border-top:1px solid #ffffff0d;padding-top:12px}.stage{overflow:hidden;position:relative;min-height:700px}.hud{position:absolute;z-index:5;left:18px;right:18px;top:16px;display:grid;grid-template-columns:1fr auto 1fr;gap:10px;pointer-events:none}.clock{background:#050a12bb;border:1px solid #ffffff12;border-radius:15px;padding:10px 14px}.clock:last-child{text-align:right}.clock small{display:block;color:#73899d;font-size:10px;letter-spacing:.16em}.clock strong{font-size:18px;font-variant-numeric:tabular-nums}.clock.a strong{color:var(--cyan)}.clock.b strong{color:var(--violet)}.ratio{align-self:center;border:1px solid #ffffff12;border-radius:999px;background:#050a12bb;padding:8px 12px;font-size:11px;color:#93a8ba}canvas{display:block;width:100%;height:700px}.bottom{margin-top:16px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stat{padding:14px 16px}.stat small{display:block;color:#71869a;font-size:10px;letter-spacing:.14em;text-transform:uppercase}.stat strong{display:block;margin-top:5px;font-size:18px}.stat em{font-style:normal;color:#72879a;font-size:11px}.explain{margin-top:16px;padding:18px 20px;display:grid;grid-template-columns:1fr 1fr;gap:24px}.explain h3{margin:0 0 7px;font-size:15px}.explain p{margin:0;color:#8ca0b2;font-size:13px;line-height:1.6}.formula{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#c8f5ff;background:#02050a88;padding:12px;border-radius:12px;border:1px solid #ffffff0d}@media(max-width:900px){.layout{grid-template-columns:1fr}.stage{min-height:560px}canvas{height:560px}.controls{order:2}.bottom{grid-template-columns:1fr 1fr}.explain{grid-template-columns:1fr}.top{align-items:start;flex-direction:column}.badge{display:none}}@media(max-width:520px){.bottom{grid-template-columns:1fr}.hud{grid-template-columns:1fr 1fr}.ratio{display:none}}
+</style>
 </head>
-<body>
-    <h1>Time Dilation Visualizer</h1>
-    <div class="controls">
-        <label>Speed A (% of c): <input type="number" id="speedA" value="50"></label>
-        <label>Speed B (% of c): <input type="number" id="speedB" value="0"></label>
-        <label>Time A: <input type="number" id="timeA" value="10">
-            <select id="timeAUnit">
-                <option value="1">Seconds</option>
-                <option value="60">Minutes</option>
-                <option value="3600">Hours</option>
-                <option value="86400">Days</option>
-                <option value="604800">Weeks</option>
-                <option value="2629800">Months</option>
-                <option value="31557600">Years</option>
-            </select>
-        </label>
-        <button onclick="calculate()">Calculate</button>
-        <button onclick="resetClocks()">Reset</button>
-        <button onclick="togglePause()">Pause/Resume</button>
-    </div>
-    <div class="controls">
-        <button onclick="setMode('cars')">Cars</button>
-        <button onclick="setMode('aging')">Aging</button>
-        <button onclick="setMode('bouncing')">Ball Bouncing</button>
-    </div>
-    <canvas id="animationCanvas" width="1400" height="700"></canvas>
-    <h3 id="result"></h3>
-
-    <script>
-        const c = 299792458;
-        let gammaA = 1;
-        let gammaB = 1;
-        let tA = 10;
-        let tB = 10;
-        let unitMultiplier = 1;
-        let unitName = 'Seconds';
-        let mode = 'cars';
-        let paused = false;
-
-        function calculate() {
-            const speedA = parseFloat(document.getElementById("speedA").value) / 100 * c;
-            const speedB = parseFloat(document.getElementById("speedB").value) / 100 * c;
-            const timeValue = parseFloat(document.getElementById("timeA").value);
-            unitMultiplier = parseFloat(document.getElementById("timeAUnit").value);
-            unitName = document.getElementById("timeAUnit").options[document.getElementById("timeAUnit").selectedIndex].text;
-            tA = timeValue * unitMultiplier;
-            gammaA = 1 / Math.sqrt(1 - (speedA * speedA) / (c * c));
-            gammaB = 1 / Math.sqrt(1 - (speedB * speedB) / (c * c));
-            tB = tA * (gammaA / gammaB);
-            document.getElementById("result").innerText = `Time for B: ${(tB/unitMultiplier).toFixed(2)} ${unitName}`;
-        }
-
-        function resetClocks() {
-            clockA = 0;
-            clockB = 0;
-            lastTime = null;
-        }
-
-        function togglePause() {
-            paused = !paused;
-        }
-
-        function setMode(newMode) {
-            mode = newMode;
-        }
-
-        const canvas = document.getElementById("animationCanvas");
-        const ctx = canvas.getContext("2d");
-        let clockA = 0, clockB = 0;
-
-        function drawCar(x, y) {
-            ctx.fillStyle = "#FFD700";
-            ctx.fillRect(x, y, 80, 40);
-            ctx.fillStyle = "#000";
-            ctx.beginPath();
-            ctx.arc(x + 15, y + 40, 10, 0, Math.PI * 2);
-            ctx.arc(x + 65, y + 40, 10, 0, Math.PI * 2);
-            ctx.fill();
-        }
-
-        function drawPerson(x, y, scale) {
-            ctx.fillStyle = "#FFD700";
-            ctx.beginPath();
-            ctx.arc(x, y, 10 * scale, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.fillRect(x - 5 * scale, y, 10 * scale, 40 * scale);
-        }
-
-        function drawBall(x, y) {
-            ctx.fillStyle = "#FFD700";
-            ctx.beginPath();
-            ctx.arc(x, y, 20, 0, Math.PI * 2);
-            ctx.fill();
-        }
-
-        function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "#f0f0f0";
-            ctx.font = "20px Arial";
-
-            if (mode === 'cars') {
-                ctx.fillText(`Clock A: ${clockA.toFixed(1)}s`, 100, 50);
-                ctx.fillText(`Clock B: ${clockB.toFixed(1)}s`, 100, 300);
-                drawCar(100 + clockA * 20, 100);
-                drawCar(100 + clockB * 20, 350);
-            } 
-            else if (mode === 'aging') {
-                ctx.beginPath();
-                ctx.moveTo(canvas.width/2, 0);
-                ctx.lineTo(canvas.width/2, canvas.height);
-                ctx.stroke();
-
-                ctx.fillText(`Clock A: ${clockA.toFixed(1)}s`, canvas.width/4 - 50, 50);
-                ctx.fillText(`Clock B: ${clockB.toFixed(1)}s`, canvas.width*3/4 - 50, 50);
-
-                drawPerson(canvas.width/4, canvas.height/2, 1 + clockA * 0.05);
-                drawPerson(canvas.width*3/4, canvas.height/2, 1 + clockB * 0.05);
-            } 
-            else if (mode === 'bouncing') {
-                ctx.strokeStyle = "#f0f0f0";
-                ctx.beginPath();
-                ctx.moveTo(200, 650);
-                ctx.lineTo(400, 650);
-                ctx.moveTo(1000, 650);
-                ctx.lineTo(1200, 650);
-                ctx.stroke();
-
-                ctx.fillText(`Clock A: ${clockA.toFixed(1)}s`, 280, 50);
-                ctx.fillText(`Clock B: ${clockB.toFixed(1)}s`, 1080, 50);
-
-                const bounceHeightA = 550 * (Math.abs(Math.sin(clockA)));
-                const bounceHeightB = 550 * (Math.abs(Math.sin(clockB)));
-
-                drawBall(300, 650 - bounceHeightA);
-                drawBall(1100, 650 - bounceHeightB);
-            }
-        }
-
-        let lastTime = null;
-        function animate(timestamp) {
-            if (!lastTime) lastTime = timestamp;
-            const delta = (timestamp - lastTime) / 1000;
-            lastTime = timestamp;
-            
-            if (!paused) {
-                clockA += delta;
-                clockB += delta * (gammaA / gammaB);
-            }
-
-            draw();
-            requestAnimationFrame(animate);
-        }
-
-        calculate();
-        requestAnimationFrame(animate);
-    </script>
-</body>
-</html>
+<body><main class="shell">
+<header class="top"><div class="brand"><div class="eyebrow">SPECIAL RELATIVITY • INTERACTIVE LAB</div><h1>CHRONO<span>LENS</span></h1><p>See time separate in real time. Push two observers toward light speed and watch motion, aging and physical change diverge.</p></div><div class="badge">γ = 1 / √(1 − v²/c²)</div></header>
+<section class="layout"><aside class="panel controls">
+<div><div class="section-title">Choose a visualization</div><div class="scene-grid"><button class="scene active" data-scene="apple">🍎 Apple lifecycle</button><button class="scene" data-scene="solar">🪐 Solar system</button><button class="scene" data-scene="cars">🏎️ Relativistic cars</button><button class="scene" data-scene="human">🧬 Human aging</button><button class="scene" data-scene="clock">💡 Light clocks</button><button class="scene" data-scene="wormhole">◉ Time vortex</button></div></div>
+<div><div class="section-title">Observer A</div><div class="row"><span>Velocity</span><span class="value" id="vaText">90.00% c</span></div><input id="va" type="range" min="0" max="99.99" step="0.01" value="90"></div>
+<div><div class="section-title">Observer B</div><div class="row"><span>Velocity</span><span class="value" id="vbText">0.00% c</span></div><input id="vb" type="range" min="0" max="99.99" step="0.01" value="0"></div>
+<div><div class="section-title">Presets</div><div class="quick"><button data-preset="0,0">Rest</button><button data-preset="50,0">0.5c</button><button data-preset="90,0">0.9c</button><button data-preset="99,0">0.99c</button><button data-preset="99.9,0">0.999c</button></div></div>
+<div><div class="section-title">Simulation rate</div><div class="row"><span>Time flow</span><span class="value" id="rateText">1.0×</span></div><input id="rate" type="range" min="-5" max="5" step=".1" value="1"><div class="note">Negative time flow reverses visual lifecycles — use it to rewind the apple from decay toward fruit, blossom and seed.</div></div>
+<div class="actions"><button class="action primary" id="pause">Pause</button><button class="action" id="reset">Reset time</button></div>
+<div class="note">Speeds are deliberately allowed only below <b>c</b>. Massive objects cannot reach the speed of light. Orbital scales and lifecycle durations are compressed for visualization.</div>
+</aside>
+<section><div class="panel stage"><div class="hud"><div class="clock a"><small>OBSERVER A • PROPER TIME</small><strong id="clockA">0.00 s</strong></div><div class="ratio" id="ratio">1.000× separation</div><div class="clock b"><small>OBSERVER B • PROPER TIME</small><strong id="clockB">0.00 s</strong></div></div><canvas id="cv"></canvas></div>
+<div class="bottom"><div class="panel stat"><small>Lorentz factor A</small><strong id="ga">2.294</strong><em>γA</em></div><div class="panel stat"><small>Lorentz factor B</small><strong id="gb">1.000</strong><em>γB</em></div><div class="panel stat"><small>A elapsed / lab second</small><strong id="ta">0.4359 s</strong><em>dτA/dt</em></div><div class="panel stat"><small>B elapsed / lab second</small><strong id="tb">1.0000 s</strong><em>dτB/dt</em></div></div>
+<div class="panel explain"><div><h3>What you are seeing</h3><p id="explainText">The same apple follows two timelines. The faster observer accumulates less proper time, so its lifecycle progresses more slowly relative to the lab frame.</p></div><div class="formula">Δτ = Δt / γ<br>γ = 1 / √(1 − β²), &nbsp; β = v/c</div></div></section></section></main>
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const cv=$('#cv'),ctx=cv.getContext('2d');let scene='apple',lab=0,paused=false,last=0,stars=[];
+const explanations={apple:'The same apple follows two timelines. The faster observer accumulates less proper time, so its lifecycle progresses more slowly relative to the lab frame. Reverse time to visually rewind decay toward fruit, blossom and seed.',solar:'Two compressed planetary systems use each observer’s proper time. Their orbital motion separates as their relativistic clocks tick at different rates.',cars:'Both cars cross a stylized track according to their own proper-time animation. The clock difference is the physics; the track motion is an intuitive visual metaphor.',human:'The figures age along compressed lifespans. This is the twin-paradox intuition: a high-speed traveler can experience less elapsed time between shared events.',clock:'A light clock ticks when a photon completes a round trip. In the lab frame a moving clock’s light path is longer, producing time dilation.',wormhole:'A cinematic spacetime view: rings and particles rotate according to each observer’s proper time, making the growing phase difference visible.'};
+function gamma(p){let b=Math.min(Math.abs(p)/100,.9999999);return 1/Math.sqrt(1-b*b)}
+function state(){let va=+$('#va').value,vb=+$('#vb').value,ga=gamma(va),gb=gamma(vb);return{va,vb,ga,gb,a:lab/ga,b:lab/gb,rate:+$('#rate').value}}
+function ui(){let s=state();$('#vaText').textContent=s.va.toFixed(2)+'% c';$('#vbText').textContent=s.vb.toFixed(2)+'% c';$('#rateText').textContent=s.rate.toFixed(1)+'×';$('#ga').textContent=s.ga.toFixed(3);$('#gb').textContent=s.gb.toFixed(3);$('#ta').textContent=(1/s.ga).toFixed(4)+' s';$('#tb').textContent=(1/s.gb).toFixed(4)+' s';$('#clockA').textContent=formatTime(s.a);$('#clockB').textContent=formatTime(s.b);$('#ratio').textContent=(Math.max(s.ga,s.gb)/Math.min(s.ga,s.gb)).toFixed(3)+'× separation'}
+function formatTime(t){let sign=t<0?'−':'';t=Math.abs(t);if(t<60)return sign+t.toFixed(2)+' s';if(t<3600)return sign+(t/60).toFixed(2)+' min';return sign+(t/3600).toFixed(2)+' h'}
+function resize(){let r=cv.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);cv.width=r.width*d;cv.height=r.height*d;ctx.setTransform(d,0,0,d,0,0);stars=Array.from({length:130},()=>({x:Math.random()*r.width,y:Math.random()*r.height,a:.15+Math.random()*.65,r:.3+Math.random()*1.2}))}
+function bg(w,h){let g=ctx.createRadialGradient(w*.5,h*.5,0,w*.5,h*.5,w*.7);g.addColorStop(0,'#0d1830');g.addColorStop(.55,'#070b16');g.addColorStop(1,'#020308');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);for(let s of stars){ctx.globalAlpha=s.a;ctx.fillStyle='#dff8ff';ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,7);ctx.fill()}ctx.globalAlpha=1}
+function divider(w,h){ctx.strokeStyle='#ffffff12';ctx.setLineDash([4,8]);ctx.beginPath();ctx.moveTo(w/2,90);ctx.lineTo(w/2,h-25);ctx.stroke();ctx.setLineDash([]);label(w*.25,105,'A', '#6ee7ff');label(w*.75,105,'B','#a78bfa')}
+function label(x,y,t,c='#fff'){ctx.textAlign='center';ctx.font='700 12px system-ui';ctx.fillStyle=c;ctx.fillText(t,x,y)}
+function apple(x,y,t,accent){let cycle=((t*.055)%4+4)%4,stage=Math.floor(cycle),f=cycle-stage;ctx.save();ctx.translate(x,y);ctx.shadowBlur=25;ctx.shadowColor=accent;if(stage===0){let sc=.25+.75*f;ctx.strokeStyle='#9b7b53';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(0,40);ctx.lineTo(0,5);ctx.stroke();ctx.fillStyle='#56a96b';for(let i=0;i<5;i++){ctx.rotate(1.25);ctx.beginPath();ctx.ellipse(18,0,22*sc,9*sc,0,0,7);ctx.fill()}ctx.fillStyle='#f4d8e4';for(let i=0;i<5;i++){ctx.rotate(1.25);ctx.beginPath();ctx.ellipse(13,0,15*f,7*f,0,0,7);ctx.fill()}label(0,92,f<.45?'SEED → SPROUT':'BLOSSOM',accent)}else{let decay=stage===3?f:stage===2?f*.35:0,rr=190-100*decay,gg=42+70*decay,bb=55-20*decay;ctx.fillStyle=`rgb(${rr},${gg},${bb})`;ctx.beginPath();ctx.arc(-20,0,50,0,7);ctx.arc(20,0,50,0,7);ctx.quadraticCurveTo(0,72,-48,18);ctx.fill();ctx.strokeStyle='#8b6948';ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(4,-42);ctx.lineTo(10,-70);ctx.stroke();ctx.fillStyle='#6fb66f';ctx.beginPath();ctx.ellipse(27,-62,24,10,-.4,0,7);ctx.fill();if(decay>.08){ctx.fillStyle='#302b20';for(let i=0;i<9;i++){let a=i*2.4,r=12+(i*13)%38;ctx.beginPath();ctx.arc(Math.cos(a)*r,Math.sin(a)*r*.7,3+decay*5,0,7);ctx.fill()}}label(0,92,stage===1?'RIPE FRUIT':stage===2?'AGING':'DECAY',accent)}ctx.restore()}
+const planets=[['#9aa2a6',22,2],['#e6b56d',31,3],['#4da3ff',42,3.5],['#d66b4a',54,2.7],['#d5a66f',72,7],['#e6d29b',92,6],['#8ed8df',109,4],['#5377d6',125,4]];
+function system(x,y,t,scale=.78){ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);let sun=ctx.createRadialGradient(0,0,2,0,0,24);sun.addColorStop(0,'#fff6b0');sun.addColorStop(1,'#ff9f1c');ctx.fillStyle=sun;ctx.shadowBlur=25;ctx.shadowColor='#ffb703';ctx.beginPath();ctx.arc(0,0,22,0,7);ctx.fill();ctx.shadowBlur=0;planets.forEach((p,i)=>{ctx.strokeStyle='#ffffff12';ctx.beginPath();ctx.arc(0,0,p[1],0,7);ctx.stroke();let a=t*(.65/Math.pow((i+1),.55))+i*.7;ctx.fillStyle=p[0];ctx.beginPath();ctx.arc(Math.cos(a)*p[1],Math.sin(a)*p[1],p[2],0,7);ctx.fill();if(i===5){ctx.strokeStyle='#e6d29b88';ctx.beginPath();ctx.ellipse(Math.cos(a)*p[1],Math.sin(a)*p[1],10,3,a,0,7);ctx.stroke()}});ctx.restore()}
+function car(x,y,t,accent,w){let roadW=w*.38,pos=((t*.09)%1+1)%1;ctx.strokeStyle='#ffffff22';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x-roadW/2,y+35);ctx.lineTo(x+roadW/2,y+35);ctx.stroke();for(let i=0;i<8;i++){let xx=x-roadW/2+i*roadW/7;ctx.strokeStyle='#ffffff12';ctx.beginPath();ctx.moveTo(xx,y+29);ctx.lineTo(xx+18,y+29);ctx.stroke()}let cx=x-roadW/2+pos*roadW;ctx.save();ctx.translate(cx,y);ctx.shadowBlur=22;ctx.shadowColor=accent;ctx.fillStyle=accent;ctx.beginPath();ctx.roundRect(-35,-18,70,25,8);ctx.fill();ctx.fillStyle='#bdeeff';ctx.beginPath();ctx.moveTo(-18,-18);ctx.lineTo(-5,-34);ctx.lineTo(18,-34);ctx.lineTo(29,-18);ctx.fill();ctx.fillStyle='#05070d';[-23,23].forEach(q=>{ctx.beginPath();ctx.arc(q,8,9,0,7);ctx.fill()});ctx.restore()}
+function human(x,y,t,accent){let age=Math.max(0,Math.min(90,20+t*.45)),old=Math.max(0,(age-45)/45);ctx.save();ctx.translate(x,y);ctx.strokeStyle=accent;ctx.fillStyle=accent;ctx.lineCap='round';ctx.lineWidth=8;ctx.shadowBlur=18;ctx.shadowColor=accent;ctx.beginPath();ctx.arc(0,-72,22-old*2,0,7);ctx.fill();ctx.beginPath();ctx.moveTo(0,-48);ctx.lineTo(0,15);ctx.moveTo(0,-20);ctx.lineTo(-35,5+old*8);ctx.moveTo(0,-20);ctx.lineTo(35,5+old*8);ctx.moveTo(0,15);ctx.lineTo(-25,62);ctx.moveTo(0,15);ctx.lineTo(22-old*8,62);ctx.stroke();if(old>.35){ctx.strokeStyle='#dfe8ef';ctx.lineWidth=2;for(let i=-2;i<=2;i++){ctx.beginPath();ctx.moveTo(i*6,-92);ctx.lineTo(i*7,-104);ctx.stroke()}}ctx.restore();label(x,y+100,Math.round(age)+' visual years',accent)}
+function lightClock(x,y,t,accent,moving){let H=250,W=120;ctx.strokeStyle=accent+'88';ctx.lineWidth=3;ctx.strokeRect(x-W/2,y-H/2,W,H);ctx.fillStyle=accent;ctx.fillRect(x-W/2-8,y-H/2-5,W+16,10);ctx.fillRect(x-W/2-8,y+H/2-5,W+16,10);let phase=((t*.7)%2+2)%2,py=phase<1?y-H/2+phase*H:y+H/2-(phase-1)*H;ctx.shadowBlur=20;ctx.shadowColor=accent;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(x,py,7,0,7);ctx.fill();ctx.shadowBlur=0;label(x,y+H/2+28,moving?'MOVING LIGHT CLOCK':'REFERENCE LIGHT CLOCK',accent)}
+function vortex(x,y,t,accent){ctx.save();ctx.translate(x,y);for(let i=0;i<18;i++){let r=15+i*9,a=t*.16+i*.42;ctx.strokeStyle=accent+(Math.max(20,130-i*5)).toString(16).padStart(2,'0');ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(0,0,r,r*.45,a,0,Math.PI*1.55);ctx.stroke()}ctx.fillStyle='#000';ctx.shadowBlur=35;ctx.shadowColor=accent;ctx.beginPath();ctx.arc(0,0,20,0,7);ctx.fill();ctx.restore()}
+function draw(){let w=cv.clientWidth,h=cv.clientHeight,s=state();bg(w,h);divider(w,h);let y=h*.52;if(scene==='apple'){apple(w*.25,y,s.a,'#6ee7ff');apple(w*.75,y,s.b,'#a78bfa')}if(scene==='solar'){system(w*.25,y,s.a);system(w*.75,y,s.b)}if(scene==='cars'){car(w*.25,y,s.a,'#6ee7ff',w);car(w*.75,y,s.b,'#a78bfa',w)}if(scene==='human'){human(w*.25,y,s.a,'#6ee7ff');human(w*.75,y,s.b,'#a78bfa')}if(scene==='clock'){lightClock(w*.25,y,s.a,'#6ee7ff',s.va>0);lightClock(w*.75,y,s.b,'#a78bfa',s.vb>0)}if(scene==='wormhole'){vortex(w*.25,y,s.a,'#6ee7ff');vortex(w*.75,y,s.b,'#a78bfa')}ctx.textAlign='center';ctx.font='12px system-ui';ctx.fillStyle='#657b8f';ctx.fillText('Visual time is compressed for clarity • clock values use the Lorentz factor',w/2,h-18)}
+function frame(ts){if(!last)last=ts;let dt=Math.min((ts-last)/1000,.05);last=ts;if(!paused)lab+=dt*state().rate;ui();draw();requestAnimationFrame(frame)}
+$$('.scene').forEach(b=>b.onclick=()=>{$$('.scene').forEach(x=>x.classList.remove('active'));b.classList.add('active');scene=b.dataset.scene;$('#explainText').textContent=explanations[scene]});$$('[data-preset]').forEach(b=>b.onclick=()=>{let [a,c]=b.dataset.preset.split(',');$('#va').value=a;$('#vb').value=c;ui()});['va','vb','rate'].forEach(id=>$('#'+id).oninput=ui);$('#pause').onclick=()=>{paused=!paused;$('#pause').textContent=paused?'Resume':'Pause'};$('#reset').onclick=()=>{lab=0;last=0};addEventListener('resize',resize);resize();ui();requestAnimationFrame(frame);
+</script></body></html>
